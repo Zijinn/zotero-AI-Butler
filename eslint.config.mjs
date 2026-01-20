@@ -22,6 +22,7 @@ export default [
       "addon/content/**/*.js",
       "scripts/**/*.mjs",
       "scripts/**/*.ts",
+      "docs/browser-ai-integration/**/*.js",
     ],
     rules: {
       // Disable all rules for these files
