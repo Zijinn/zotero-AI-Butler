@@ -1,6 +1,6 @@
 import { ILlmProvider } from "./ILlmProvider";
 import { ConversationMessage, LLMOptions, ProgressCb } from "./types";
-import { SYSTEM_ROLE_PROMPT, buildUserMessage } from "../../utils/prompts";
+import { SYSTEM_ROLE_PROMPT } from "../../utils/prompts";
 
 /**
  * BrowserAIProvider - 浏览器 AI 提供商
@@ -22,7 +22,16 @@ import { SYSTEM_ROLE_PROMPT, buildUserMessage } from "../../utils/prompts";
  */
 export class BrowserAIProvider implements ILlmProvider {
   readonly id = "browser-ai";
-  private requestTimeout = 300000; // 5分钟默认超时
+  private static readonly DEFAULT_TIMEOUT_MS = 300000; // 5分钟默认超时
+  private requestTimeout = BrowserAIProvider.DEFAULT_TIMEOUT_MS;
+
+  /**
+   * 获取浏览器窗口对象
+   * 在 Zotero 插件环境中安全获取 window 对象
+   */
+  private getWindow(): Window | null {
+    return Zotero.getMainWindow() || (globalThis as any).window || null;
+  }
 
   /**
    * 发送请求到浏览器插件
@@ -37,8 +46,7 @@ export class BrowserAIProvider implements ILlmProvider {
       const progressChunks: string[] = [];
 
       // Get window from global context
-      const win =
-        Zotero.getMainWindow() || (globalThis as any).window || globalThis;
+      const win = this.getWindow();
       if (!win) {
         reject(new Error("无法访问浏览器窗口对象"));
         return;

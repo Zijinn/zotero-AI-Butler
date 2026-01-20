@@ -102,6 +102,18 @@ const summary = await summarizer.summarize(text);
 - Enable AI features in `chrome://flags`
 - Check API availability: `await window.ai.languageModel.capabilities()`
 
+### Base64 PDF Error
+
+⚠️ **Important**: Browser AI APIs do not support direct Base64 PDF processing.
+When using Browser AI provider, you **must** configure Zotero AI Butler to use **"文字提取模式" (Text Extraction Mode)** instead of "多模态处理 Base64" in the PDF processing settings.
+
+To configure:
+
+1. Open Zotero AI Butler settings
+2. Go to "快捷设置" (Quick Settings)
+3. Find "PDF处理方式" (PDF Processing Mode)
+4. Select "文字提取模式" (Text Extraction Mode)
+
 ## Example Usage
 
 ```javascript

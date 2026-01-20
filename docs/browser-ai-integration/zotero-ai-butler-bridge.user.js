@@ -103,11 +103,15 @@
 
       // Handle PDF content
       if (payload.isBase64) {
-        // For base64, we can't directly pass to browser AI
-        // User should extract text first or use text-based processing
-        fullPrompt +=
-          "PDF Content (Base64): [Content provided as base64, please process the extracted text]\n";
-        fullPrompt += `Content length: ${payload.content.length} characters\n`;
+        // ⚠️ LIMITATION: Browser AI APIs (Chrome Prompt API) do not support direct PDF processing
+        // Users should configure Zotero AI Butler to use text extraction mode instead of Base64
+        // when using Browser AI provider
+        
+        throw new Error(
+          'Browser AI does not support Base64 PDF processing. ' +
+          'Please configure Zotero AI Butler to use "文字提取模式" (Text Extraction Mode) ' +
+          'instead of "多模态处理 Base64" in the PDF processing settings.'
+        );
       } else {
         // Text content
         fullPrompt += "Paper Content:\n" + payload.content;
