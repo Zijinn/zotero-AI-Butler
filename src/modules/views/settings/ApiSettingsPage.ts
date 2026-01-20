@@ -85,6 +85,7 @@ export class ApiSettingsPage {
         { value: "anthropic", label: "Anthropic Claude" },
         { value: "openrouter", label: "OpenRouter" },
         { value: "volcanoark", label: "火山方舟 (Volcano Ark)" },
+        { value: "browser-ai", label: "🌐 浏览器 AI (Browser AI)" },
       ],
       providerValue,
       (newVal) => {
@@ -192,6 +193,9 @@ export class ApiSettingsPage {
     });
     const sectionVolcanoArk = this.createElement("div", {
       id: "provider-volcanoark",
+    });
+    const sectionBrowserAI = this.createElement("div", {
+      id: "provider-browser-ai",
     });
 
     // OpenAI 字段（Responses 新接口）
@@ -477,12 +481,54 @@ export class ApiSettingsPage {
     });
     sectionVolcanoArk.appendChild(volcanoArkNote);
 
+    // Browser AI 字段（无需 API Key）
+    const browserAINote = this.createElement("div", {
+      innerHTML:
+        "🌐 <strong>浏览器 AI 集成</strong><br/><br/>" +
+        "通过浏览器插件（如 Tampermonkey 脚本）调用浏览器原生 AI API（如 Chrome AI Prompt API）。<br/><br/>" +
+        "<strong>配置步骤：</strong><br/>" +
+        "1. 确保浏览器支持 AI API（Chrome 127+ 并启用 AI 功能）<br/>" +
+        "2. 安装 Tampermonkey 或类似浏览器扩展<br/>" +
+        "3. 安装配套的浏览器脚本（见下方示例）<br/>" +
+        "4. 脚本将监听 'zotero-ai-butler-request' 事件并调用浏览器 AI<br/>" +
+        "5. 点击下方 '测试连接' 按钮验证集成是否正常<br/><br/>" +
+        "<strong>⚠️ 注意：</strong>此功能需要浏览器与 Zotero 在同一环境运行，且需要正确配置通信脚本。",
+      styles: {
+        padding: "12px 16px",
+        backgroundColor: "#e3f2fd",
+        border: "1px solid #2196f3",
+        borderRadius: "6px",
+        color: "#1565c0",
+        fontSize: "13px",
+        marginBottom: "16px",
+        lineHeight: "1.6",
+      },
+    });
+    sectionBrowserAI.appendChild(browserAINote);
+
+    // 添加示例脚本链接
+    const exampleScript = this.createElement("div", {
+      innerHTML:
+        "📝 <strong>示例脚本</strong>：请参考项目文档中的 Tampermonkey 脚本示例。",
+      styles: {
+        padding: "10px 12px",
+        backgroundColor: "#fff3e0",
+        border: "1px solid #ffb74d",
+        borderRadius: "6px",
+        color: "#e65100",
+        fontSize: "13px",
+        marginBottom: "16px",
+      },
+    });
+    sectionBrowserAI.appendChild(exampleScript);
+
     form.appendChild(sectionOpenAI);
     form.appendChild(sectionOpenAICompat);
     form.appendChild(sectionGemini);
     form.appendChild(sectionAnthropic);
     form.appendChild(sectionOpenRouter);
     form.appendChild(sectionVolcanoArk);
+    form.appendChild(sectionBrowserAI);
 
     const renderProviderSections = (prov: string) => {
       const isGemini = prov === "google";
@@ -490,12 +536,14 @@ export class ApiSettingsPage {
       const isOpenRouter = prov === "openrouter";
       const isOpenAICompat = prov === "openai-compat";
       const isVolcanoArk = prov === "volcanoark";
+      const isBrowserAI = prov === "browser-ai";
       (sectionOpenAI as HTMLElement).style.display =
         isGemini ||
         isAnthropic ||
         isOpenAICompat ||
         isOpenRouter ||
-        isVolcanoArk
+        isVolcanoArk ||
+        isBrowserAI
           ? "none"
           : "block";
       (sectionOpenAICompat as HTMLElement).style.display = isOpenAICompat
@@ -511,6 +559,9 @@ export class ApiSettingsPage {
         ? "block"
         : "none";
       (sectionVolcanoArk as HTMLElement).style.display = isVolcanoArk
+        ? "block"
+        : "none";
+      (sectionBrowserAI as HTMLElement).style.display = isBrowserAI
         ? "block"
         : "none";
     };
